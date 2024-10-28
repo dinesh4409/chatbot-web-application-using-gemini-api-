@@ -1,0 +1,184 @@
+/* General Styles */
+body, h1 {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f4f9;
+    background-image: url('../images/image.png'); /* Replace with your image URL */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* Chat Container */
+#chat-container {
+    width: 100vw;
+    height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #222;
+    color: #fff;
+    box-sizing: border-box;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Chat Messages Area */
+#chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    max-height: calc(100vh - 150px);
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Message Styles */
+.message {
+    max-width: 80%;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    clear: both;
+}
+
+/* User Message Styles */
+.user-message {
+    background-color: #000000;
+    color: #fff;
+    float: right;
+}
+
+/* Bot Message Styles */
+.bot-message {
+    background-color: #000000;
+    color: #fff;
+    float: left;
+}
+
+/* Input Area - Grouping Text and Button */
+#input-area {
+    display: flex;
+    gap: 10px; /* Space between input fields */
+}
+
+/* Input Styles */
+input[type="text"], #image-upload {
+    flex-grow: 1; /* Input takes up the remaining width */
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #444;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+input[type="text"]:focus {
+    background-color: #555;
+    outline: none; /* Remove default outline */
+}
+
+/* Button Styles */
+#send-button {
+    padding: 10px 15px;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    flex-shrink: 0; /* Prevents button from shrinking */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+#send-button:hover {
+    background-color: #cad7e6; /* Darker blue on hover */
+}
+
+/* Cancel Button Styles */
+#cancel-image {
+    padding: 10px 15px;
+    background-color: #320a0e;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none; /* Initially hidden */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+#cancel-image:hover {
+    background-color: #d73747; /* Darker red on hover */
+}
+
+/* Select File Button Styles */
+#file-upload-button {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#file-upload-button:hover {
+    background-color: #cad7e6; /* Darker blue on hover */
+}
+
+/* Image Preview Container */
+#image-preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px; /* Space above image preview */
+}
+
+/* Image Preview Styles */
+#image-preview {
+    display: none;
+    max-width: 100px; /* Resize the image as needed */
+    max-height: 100px; /* Set max height to maintain aspect ratio */
+    border-radius: 5px;
+    margin-bottom: 10px; /* Space below image preview */
+}
+
+
+/* Microphone button styles */
+#mic-button {
+    background-color: #000000; /* Black background for mic button */
+    color: #ecf0f1; /* Text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Square shape (no rounded corners) */
+    padding: 10px; /* Inner padding */
+    width: 50px; /* Fixed width */
+    height: 50px; /* Fixed height */
+    cursor: pointer; /* Pointer cursor */
+    display: flex; /* Flexbox for centering */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+}
+
+/* Microphone button hover effects */
+#mic-button:hover {
+    background-color:#cad7e6; /* Darker orange on hover */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+}

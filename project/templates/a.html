@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/b.css') }}">
+    <title>Chatbot</title>
+</head>
+<body>
+    <h1 style="color: rgb(186, 196, 205);">Welcome to Chatbot</h1>
+    <div id="chat-container">
+        <div id="chat-messages"></div>
+        
+        <!-- Grouping input field and buttons -->
+        <div id="input-area">
+            <input type="file" id="image-upload" accept="image/*" style="display: none;" />
+            <label for="image-upload" id="file-upload-button">Select File</label> <!-- Select File Button -->
+            <input type="text" id="message" placeholder="Type your message..." />
+            <button type="button" id="mic-button">🎤</button> <!-- Microphone Button -->
+            <button type="button" id="send-button">Send</button>
+        </div>
+        
+        <div id="image-preview-container">
+            <img id="image-preview" src="#" alt="Image Preview" style="display: none;" />
+            <button type="button" id="cancel-image" style="display: none;">Cancel Image</button>
+        </div>
+    </div>
+
+    <script>
+        let imageData = '';
+        let recognition;
+
+        // Initialize the Speech Recognition API
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = false; // Set to true for continuous mode
+            recognition.interimResults = false; // Only final results
+            recognition.lang = 'en-US'; // Set language
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript; // Get the recognized text
+                document.getElementById('message').value = transcript; // Set the input field with the recognized text
+                recognition.stop(); // Stop recognition after getting result
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error detected: ' + event.error);
+            };
+        } else {
+            console.warn('Speech recognition not supported in this browser.');
+        }
+
+        document.getElementById('mic-button').addEventListener('click', function() {
+            if (recognition) {
+                recognition.start(); // Start speech recognition
+            }
+        });
+
+        document.getElementById('image-upload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const imagePreview = document.getElementById('image-preview');
+                imagePreview.src = e.target.result; // Set the source to the base64 image
+                imagePreview.style.display = 'block'; // Show the image
+                document.getElementById('cancel-image').style.display = 'block'; // Show cancel button
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('cancel-image').addEventListener('click', function() {
+            document.getElementById('image-upload').value = ''; // Clear file input
+            document.getElementById('image-preview').style.display = 'none'; // Hide image preview
+            this.style.display = 'none'; // Hide cancel button
+            imageData = ''; // Clear the image data
+        });
+
+        document.getElementById('send-button').addEventListener('click', function(event) {
+            const message = document.getElementById('message').value;
+            const imageUpload = document.getElementById('image-upload').files[0];
+
+            if (imageUpload) {
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    imageData = reader.result.split(',')[1]; // Get base64 data
+                    sendMessage(message, imageData);
+                };
+                reader.readAsDataURL(imageUpload);
+            } else {
+                sendMessage(message);
+            }
+        });
+
+        function sendMessage(message, imageData = '') {
+            // Add user message to chat
+            const chatMessages = document.getElementById('chat-messages');
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.className = 'message user-message';
+
+            // Set message text if provided
+            if (message) {
+                userMessageDiv.textContent = message; // Set the text content
+            }
+
+            // If there's image data, create an image element
+            if (imageData) {
+                const imageElement = document.createElement('img');
+                imageElement.src = `data:image/png;base64,${imageData}`; // Use base64 image data
+                imageElement.style.width = '100px'; // Set width for the image
+                imageElement.style.height = 'auto'; // Maintain aspect ratio
+                imageElement.style.borderRadius = '5px'; // Rounded corners
+                userMessageDiv.appendChild(imageElement); // Append image to user message
+            }
+
+            chatMessages.appendChild(userMessageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
+
+            // Send the message to the server
+            fetch('/send_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message, image: imageData }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                const botMessageDiv = document.createElement('div');
+                botMessageDiv.className = 'message bot-message';
+                botMessageDiv.textContent = data.response;
+                chatMessages.appendChild(botMessageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
+            })
+            .catch(error => console.error('Error:', error));
+
+            // Clear inputs
+            document.getElementById('message').value = '';
+            document.getElementById('image-upload').value = ''; // Clear file input
+            document.getElementById('image-preview').style.display = 'none'; // Hide image preview
+            document.getElementById('cancel-image').style.display = 'none'; // Hide cancel button
+        }
+
+        // Send message on Enter key press
+        document.getElementById('message').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                document.getElementById('send-button').click(); // Trigger click event on send button
+            }
+        });
+    </script>
+</body>
+</html>
