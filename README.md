@@ -33,8 +33,8 @@ Cloudy AI is designed to provide an interactive web-based platform where users c
 
 ### Clone the Repository:
 ```sh
-   git clone git@github.com:dinesh4409/chatbot-web-application-using-gemini-api-.git
-   cd chatbot-web-application-using-gemini-api-
+   git@github.com:dinesh4409/cloudy-AI.git
+   cd cloudy-AI
 ```
 
 ### Install Flask:
